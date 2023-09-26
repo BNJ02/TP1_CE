@@ -27,14 +27,24 @@ main:	movlw 0CFh
 	option
 	movlw 0F8h
 	tris GPIO
+	goto loop ; Va dans la boucle infinie
 
 ; Programme principal
 	
-; Pour mettre à un (HIGH) le GP0
-	bsf GPIO, GP0
-; Pour mettre à zéro (LOW) le GP0
-	;bcf GPIO, GP0
-	
+; La boucle infinie
+loop:
+	; Lecture de l'état de GP3
+	btfsc GPIO, GP3   ; Vérifie si GP3 est à 0 (bit test skip if clear)
+	goto gp3_is_set   ; Saute à "gp3_is_set" si GP3 est à 1 (HIGH)
 
+	; Si GP3 est à 0 (LOW), mettre à 1 (HIGH) GP0
+	bsf GPIO, GP0
+
+    gp3_is_set:
+	    ; Si GP3 est à 0 (LOW), mettre à 1 (HIGH) GP0
+	    bcf GPIO, GP0
+	    
+    ; Saut vers le début de la boucle (while(1) infinie)
+    goto loop
 
 END
