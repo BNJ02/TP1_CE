@@ -1,0 +1,126 @@
+MPASM 5.86                          MAIN.ASM   9-26-2023  11:44:46         PAGE  1
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+                      00001 ; Programme assembleur du TP1 de CE (Circuit Electronique), 26/09/2023, Adji TOURE & Benjamin Lepourtois
+                      00002 ; PIC10F200
+                      00003 ; LIST p=PIC10F200
+                      00004 #include p10f200.inc
+                      00001         LIST
+                      00002 
+                      00003 ;==========================================================================
+                      00004 ; Build date : Oct 24 2019
+                      00005 ;  MPASM PIC10F200 processor include
+                      00006 ; 
+                      00007 ;  (c) Copyright 1999-2019 Microchip Technology, All rights reserved
+                      00008 ;==========================================================================
+                      00009 
+                      00152         LIST
+                      00005 
+Warning[205]: Found directive in column 1. (__CONFIG)
+0FFF   0FEB           00006 __CONFIG _WDTE_OFF & _CP_OFF & _MCLRE_OFF
+                      00007 
+  00000003            00008 STATUS equ 03h
+  00000005            00009 OSCCAL equ 05h
+  00000006            00010 GPIO equ 06h
+  00000000            00011 GP0 equ 00h
+  00000001            00012 GP1 equ 01h
+  00000002            00013 GP2 equ 02h
+  00000003            00014 GP3 equ 03h
+  00000010            00015 var1 equ 10h
+                      00016 
+                      00017 ; Start
+                      00018         ORG 0X000
+                      00019 
+0000   0025           00020         movwf OSCCAL
+0001   0A??           00021         goto main
+                      00022 
+                      00023         ORG 0X020
+                      00024 
+                      00025 ; Set up
+0020   0CCF           00026 main:   movlw 0CFh
+0021   0002           00027         option
+0022   0CF8           00028         movlw 0F8h
+0023   0006           00029         tris GPIO
+                      00030 
+                      00031 ; Programme principal
+                      00032  
+Warning[205]: Found directive in column 1. (END)
+0FEB                  00033 END
+MPASM 5.86                          MAIN.ASM   9-26-2023  11:44:46         PAGE  2
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+C                                 00000000
+CAL0                              00000001
+CAL1                              00000002
+CAL2                              00000003
+CAL3                              00000004
+CAL4                              00000005
+CAL5                              00000006
+CAL6                              00000007
+DC                                00000001
+F                                 00000001
+FOSC4                             00000000
+FSR                               00000004
+GP0                               00000000
+GP1                               00000001
+GP2                               00000002
+GP3                               00000003
+GPIO                              00000006
+GPWUF                             00000007
+INDF                              00000000
+NOT_GPPU                          00000006
+NOT_GPWU                          00000007
+NOT_PD                            00000003
+NOT_TO                            00000004
+OSCCAL                            00000005
+PCL                               00000002
+PS0                               00000000
+PS1                               00000001
+PS2                               00000002
+PSA                               00000003
+STATUS                            00000003
+T0CS                              00000005
+T0SE                              00000004
+TMR0                              00000001
+TRISIO0                           00000000
+TRISIO1                           00000001
+TRISIO2                           00000002
+TRISIO3                           00000003
+W                                 00000000
+Z                                 00000002
+_CONFIG                           00000FFF
+_CP_OFF                           00000FFF
+_CP_ON                            00000FF7
+_IDLOC0                           00000100
+_IDLOC1                           00000101
+_IDLOC2                           00000102
+_IDLOC3                           00000103
+_IntRC_OSC                        00000FFF
+_MCLRE_OFF                        00000FEF
+_MCLRE_ON                         00000FFF
+_OSC_IntRC                        00000FFF
+_WDTE_OFF                         00000FFB
+_WDTE_ON                          00000FFF
+_WDT_OFF                          00000FFB
+MPASM 5.86                          MAIN.ASM   9-26-2023  11:44:46         PAGE  3
+
+
+SYMBOL TABLE
+  LABEL                             VALUE 
+
+_WDT_ON                           00000FFF
+__10F200                          00000001
+main                              00000020
+var1                              00000010
+
+Errors   :     0
+Warnings :     2 reported,     0 suppressed
+Messages :     0 reported,     0 suppressed
+
+
