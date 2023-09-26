@@ -29,5 +29,12 @@ main:	movlw 0CFh
 	tris GPIO
 
 ; Programme principal
- 
+	
+; Pour mettre à un (HIGH) le GP0
+	bsf GPIO, GP0
+; Pour mettre à zéro (LOW) le GP0
+	;bcf GPIO, GP0
+	
+
+
 END
