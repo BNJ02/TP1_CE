@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-26-2023  11:44:46         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-27-2023  8:58:18         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -30,26 +30,73 @@ Warning[205]: Found directive in column 1. (__CONFIG)
   00000002            00013 GP2 equ 02h
   00000003            00014 GP3 equ 03h
   00000010            00015 var1 equ 10h
-                      00016 
-                      00017 ; Start
-                      00018         ORG 0X000
-                      00019 
-0000   0025           00020         movwf OSCCAL
-0001   0A??           00021         goto main
-                      00022 
-                      00023         ORG 0X020
+  00000011            00016 temp0 equ 11h
+  00000012            00017 temp1 equ 12h
+                      00018 
+                      00019 ; Start
+                      00020     ORG 0X000
+                      00021 
+0000   0025           00022     movwf OSCCAL
+0001   0A??           00023     goto main
                       00024 
-                      00025 ; Set up
-0020   0CCF           00026 main:   movlw 0CFh
-0021   0002           00027         option
-0022   0CF8           00028         movlw 0F8h
-0023   0006           00029         tris GPIO
-                      00030 
-                      00031 ; Programme principal
-                      00032  
+                      00025     ORG 0X020
+                      00026 
+                      00027 ; Set up
+0020   0CCF           00028 main:   movlw 0CFh
+0021   0002           00029     option
+0022   0CF8           00030     movlw 0F8h
+0023   0006           00031     tris GPIO
+0024   0A??           00032     goto loop ; Va dans la boucle infinie
+                      00033 
+                      00034 ; Programme principal
+                      00035         
+                      00036 ; La boucle infinie
+0025                  00037 loop:
+                      00038     ; Lecture de l'état de GP3
+0025   0766           00039     btfss GPIO, GP3   ; Vérifie si GP3 est à 1 (bit test skip if set)
+0026   0A??           00040     goto gp3_is_clear   ; Saute à "gp3_is_clear" si GP3 est à 0 (LOW)
+                      00041 
+                      00042     ; Mettre à 0 (LOW) GP0
+MPASM 5.86                          MAIN.ASM   9-27-2023  8:58:18         PAGE  2
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0027   0406           00043     bcf GPIO, GP0
+                      00044     
+                      00045     ; Saut vers le début de la boucle infinie
+0028   0A??           00046     goto loop
+                      00047 
+0029                  00048 gp3_is_clear:
+                      00049     ; Mettre à 1 (HIGH) GP0
+0029   0506           00050     bsf GPIO, GP0
+                      00051     ; Charge la valeur 250 (en décimal) dans WREG
+Warning[202]: Argument out of range.  Least significant bits used.
+002A   0C50           00052     movlw 250
+                      00053     ; Stocke la valeur de WREG à l'adresse mémoire temp0 (0x11h)
+002B   0031           00054     movwf temp0
+                      00055     ; Stocke la valeur de WREG aussi à l'adresse mémoire temp1 (0x12h)
+002C   0032           00056     movwf temp1
+                      00057     ; Attend 250ms
+002D   0A??           00058     goto timer_250ms
+                      00059     
+002E                  00060 timer_250ms:
+002E   0000           00061     nop
+002F   0000           00062     nop
+0030   0000           00063     nop
+                      00064     ; Décrémente la variable temp1
+0031   02F2           00065     decfsz temp1, 1
+                      00066     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
+0032   0A??           00067     goto timer_250ms
+                      00068     ; Décrémente la variable temp0
+0033   02F1           00069     decfsz temp0, 1
+                      00070     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
+0034   0A??           00071     goto timer_250ms
+                      00072 
 Warning[205]: Found directive in column 1. (END)
-0FEB                  00033 END
-MPASM 5.86                          MAIN.ASM   9-26-2023  11:44:46         PAGE  2
+0FEB                  00073 END
+MPASM 5.86                          MAIN.ASM   9-27-2023  8:58:18         PAGE  3
 
 
 SYMBOL TABLE
@@ -108,7 +155,7 @@ _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
 _WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-26-2023  11:44:46         PAGE  3
+MPASM 5.86                          MAIN.ASM   9-27-2023  8:58:18         PAGE  4
 
 
 SYMBOL TABLE
@@ -116,11 +163,16 @@ SYMBOL TABLE
 
 _WDT_ON                           00000FFF
 __10F200                          00000001
+gp3_is_clear                      00000029
+loop                              00000025
 main                              00000020
+temp0                             00000011
+temp1                             00000012
+timer_250ms                       0000002E
 var1                              00000010
 
 Errors   :     0
-Warnings :     2 reported,     0 suppressed
+Warnings :     3 reported,     0 suppressed
 Messages :     0 reported,     0 suppressed
 
 

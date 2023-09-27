@@ -1,2 +1,3 @@
-Warning[205] C:\USERS\BENJI\MPLABXPROJECTS\TP1_CE.X\MAIN.ASM 6 : Found directive in column 1. (__CONFIG)
-Warning[205] C:\USERS\BENJI\MPLABXPROJECTS\TP1_CE.X\MAIN.ASM 33 : Found directive in column 1. (END)
+Warning[205] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 6 : Found directive in column 1. (__CONFIG)
+Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 52 : Argument out of range.  Least significant bits used.
+Warning[205] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 73 : Found directive in column 1. (END)
