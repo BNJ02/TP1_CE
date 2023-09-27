@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-27-2023  14:19:31         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:56:31         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -32,87 +32,114 @@ Warning[205]: Found directive in column 1. (__CONFIG)
   00000010            00015 var1 equ 10h
   00000011            00016 temp0 equ 11h
   00000012            00017 temp1 equ 12h
-                      00018 
-                      00019 ; Start
-                      00020     ORG 0X000
-                      00021 
-0000   0025           00022     movwf OSCCAL
-0001   0A??           00023     goto main
-                      00024 
-                      00025     ORG 0X020
+  00000011            00018 temp2 equ 11h
+  00000012            00019 temp3 equ 12h
+                      00020 
+                      00021 ; Start
+                      00022     ORG 0X000
+                      00023 
+0000   0025           00024     movwf OSCCAL
+0001   0A??           00025     goto main
                       00026 
-                      00027 ; Set up
-0020   0CCF           00028 main:   movlw 0CFh
-0021   0002           00029     option
-0022   0CF8           00030     movlw 0F8h
-0023   0006           00031     tris GPIO
-0024   0506           00032     bsf GPIO, GP0
-                      00033 
-                      00034 ; Programme principal
-                      00035 ; La boucle infinie
-0025                  00036 loop: 
-0025                  00037 led_on_pressed:
-0025   0666           00038     btfsc GPIO, GP3 ; test de l'entrée 1
-0026   0A??           00039     goto led_on_pressed; Le bouton n'est pas appuyé
-0027   0506           00040     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
-                      00041     ; Charge la valeur 250 (en décimal) dans WREG
-Warning[202]: Argument out of range.  Least significant bits used.
-MPASM 5.86                          MAIN.ASM   9-27-2023  14:19:31         PAGE  2
+                      00027     ORG 0X020
+                      00028 
+                      00029 ; Set up
+0020   0CCF           00030 main:   movlw 0CFh
+0021   0002           00031     option
+0022   0CF8           00032     movlw 0F8h
+0023   0006           00033     tris GPIO
+0024   0506           00034     bsf GPIO, GP0
+                      00035 
+                      00036 ; Programme principal
+                      00037 ; La boucle infinie
+0025                  00038 loop: 
+0025                  00039 led_on_pressed:
+0025   0666           00040     btfsc GPIO, GP3 ; test de l'entrée 1
+0026   0A??           00041     goto led_on_pressed; Le bouton n'est pas appuyé
+0027   0506           00042     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:56:31         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0028   0C50           00042     movlw 250
-0029   0031           00043     movwf temp0
+                      00043     ; Charge la valeur 250 (en décimal) dans WREG
+0028   0C10           00044     movlw 10
+0029   0031           00045     movwf temp2
+002A   09??           00046     call timer_1s
+002B   0526           00047     bsf GPIO, GP1
+002C   0C10           00048     movlw 10
+002D   0031           00049     movwf temp2
+002E   09??           00050     call timer_1s
+002F   0C10           00051     movlw 10
+0030   0031           00052     movwf temp2
+0031   09??           00053     call timer_1s
+0032   0546           00054     bsf GPIO, GP2
+                      00055 
+0033                  00056 led_on_released:
+0033   0766           00057     btfss GPIO, GP3 ; test de l'entrée 1
+0034   0A??           00058     goto led_on_released ;Le bouton n'est pas relaché...
+                      00059     ; Le bouton est relaché
+                      00060         
+0035                  00061 led_off_pressed: 
+0035   0666           00062     btfsc GPIO, GP3 ; test de l'entrée 1
+0036   0A??           00063     goto led_off_pressed; Le bouton n'est pas appuyé
+0037   0406           00064     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
+0038   0426           00065     bcf GPIO, GP1
+0039   0446           00066     bcf GPIO, GP2
+                      00067     ; Charge la valeur 250 (en décimal) dans WREG
 Warning[202]: Argument out of range.  Least significant bits used.
-002A   0C00           00044     movlw 100
-002B   0032           00045     movwf temp1
-002C   09??           00046     call timer_100ms
-                      00047 
-002D                  00048 led_on_released:
-002D   0766           00049     btfss GPIO, GP3 ; test de l'entrée 1
-002E   0A??           00050     goto led_on_released ;Le bouton n'est pas relaché...
-                      00051     ; Le bouton est relaché
-                      00052         
-002F                  00053 led_off_pressed: 
-002F   0666           00054     btfsc GPIO, GP3 ; test de l'entrée 1
-0030   0A??           00055     goto led_off_pressed; Le bouton n'est pas appuyé
-0031   0406           00056     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
-                      00057     ; Charge la valeur 250 (en décimal) dans WREG
+003A   0C50           00068     movlw 250
+003B   0031           00069     movwf temp0
 Warning[202]: Argument out of range.  Least significant bits used.
-0032   0C50           00058     movlw 250
-0033   0031           00059     movwf temp0
+003C   0C00           00070     movlw 100
+003D   0032           00071     movwf temp1
+003E   09??           00072     call timer_100ms
+                      00073 
+                      00074 
+003F                  00075 led_off_released:
+003F   0766           00076     btfss GPIO, GP3 ; test de l'entrée 1
+0040   0A??           00077     goto led_off_released ;Le bouton n'est pas relaché...
+                      00078     ; Le bouton est relaché  
+0041   0A??           00079     goto loop
+                      00080 
+                      00081     
+0042                  00082 timer_100ms:
+0042   0000           00083     nop
+0043   0000           00084     nop
+0044   0000           00085     nop
+                      00086     ; Décrémente la variable temp1
+0045   02F2           00087     decfsz temp1, 1
+                      00088     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
+0046   0A??           00089     goto timer_100ms
+                      00090     ; Décrémente la variable temp0
+0047   02F1           00091     decfsz temp0, 1
+                      00092     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
+0048   0A??           00093     goto timer_100ms
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:56:31         PAGE  3
+
+
+LOC  OBJECT CODE     LINE SOURCE TEXT
+  VALUE
+
+0049   0800           00094     retlw 0  
+                      00095     
+004A                  00096 timer_1s:
 Warning[202]: Argument out of range.  Least significant bits used.
-0034   0C00           00060     movlw 100
-0035   0032           00061     movwf temp1
-0036   09??           00062     call timer_100ms
-0037   0426           00063     bcf GPIO, GP1
-0038   0446           00064     bcf GPIO, GP2
-                      00065 
-0039                  00066 led_off_released:
-0039   0766           00067     btfss GPIO, GP3 ; test de l'entrée 1
-003A   0A??           00068     goto led_off_released ;Le bouton n'est pas relaché...
-                      00069     ; Le bouton est relaché  
-003B   0A??           00070     goto loop
-                      00071     
-003C                  00072 timer_100ms:
-003C   0000           00073     nop
-003D   0000           00074     nop
-003E   0000           00075     nop
-                      00076     ; Décrémente la variable temp1
-003F   02F2           00077     decfsz temp1, 1
-                      00078     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
-0040   0A??           00079     goto timer_100ms
-                      00080     ; Décrémente la variable temp0
-0041   02F1           00081     decfsz temp0, 1
-                      00082     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
-0042   0A??           00083     goto timer_100ms
-0043   0800           00084     retlw 0
-                      00085 
+004A   0C50           00097     movlw 250
+004B   0031           00098     movwf temp0
+Warning[202]: Argument out of range.  Least significant bits used.
+004C   0C00           00099     movlw 100
+004D   0032           00100     movwf temp1
+004E   09??           00101     call timer_100ms
+                      00102     ; Décrémente la variable temp2
+004F   02F1           00103     decfsz temp2, 1
+0050   0A??           00104     goto timer_1s
+0051   0800           00105     retlw 0
+                      00106 
 Warning[205]: Found directive in column 1. (END)
-0FEB                  00086 END
-MPASM 5.86                          MAIN.ASM   9-27-2023  14:19:31         PAGE  3
+0FEB                  00107 END
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:56:31         PAGE  4
 
 
 SYMBOL TABLE
@@ -171,7 +198,7 @@ _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
 _WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-27-2023  14:19:31         PAGE  4
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:56:31         PAGE  5
 
 
 SYMBOL TABLE
@@ -179,15 +206,18 @@ SYMBOL TABLE
 
 _WDT_ON                           00000FFF
 __10F200                          00000001
-led_off_pressed                   0000002F
-led_off_released                  00000039
+led_off_pressed                   00000035
+led_off_released                  0000003F
 led_on_pressed                    00000025
-led_on_released                   0000002D
+led_on_released                   00000033
 loop                              00000025
 main                              00000020
 temp0                             00000011
 temp1                             00000012
-timer_100ms                       0000003C
+temp2                             00000011
+temp3                             00000012
+timer_100ms                       00000042
+timer_1s                          0000004A
 var1                              00000010
 
 Errors   :     0
