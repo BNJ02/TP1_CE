@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-27-2023  9:56:31         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -46,99 +46,75 @@ Warning[205]: Found directive in column 1. (__CONFIG)
 0021   0002           00029     option
 0022   0CF8           00030     movlw 0F8h
 0023   0006           00031     tris GPIO
-0024   0A??           00032     goto loop ; Va dans la boucle infinie
-                      00033 
-                      00034 ; Programme principal
-                      00035         
-                      00036 ; La boucle infinie
-0025                  00037 loop:
-                      00038     ; Lecture de l'état de GP3
-0025   0766           00039     btfss GPIO, GP3   ; Vérifie si GP3 est à 1 (bit test skip if set)
-0026   0A??           00040     goto gp3_is_clear   ; Saute à "gp3_is_clear" si GP3 est à 0 (LOW)
-                      00041 
-                      00042     ; Mettre à 0 (LOW) GP0
-MPASM 5.86                          MAIN.ASM   9-27-2023  9:56:31         PAGE  2
+0024   0C00           00032     movlw 0
+0025   0030           00033     movwf var1
+                      00034     ; Mettre à 0 (LOW) GP0
+0026   0406           00035     bcf GPIO, GP0
+0027   0A??           00036     goto loop ; Va dans la boucle infinie
+                      00037 
+                      00038 ; Programme principal
+                      00039         
+                      00040 ; La boucle infinie
+0028                  00041 loop:
+                      00042     ; Lecture de l'état de GP3
+MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0027   0406           00043     bcf GPIO, GP0
-                      00044     
-                      00045     ; Saut vers le début de la boucle infinie
-0028   0A??           00046     goto loop
-                      00047 
-0029                  00048 gp3_is_clear:
-                      00049     ; Mettre à 1 (HIGH) GP0
-0029   0506           00050     bsf GPIO, GP0
-                      00051     
-                      00052     ;movlw 1
-                      00053     ;movwf var1
-                      00054     
-                      00055     ; Charge la valeur 250 (en décimal) dans WREG
+0028   0766           00043     btfss GPIO, GP3   ; Vérifie si GP3 est à 1 (bit test skip if set)
+0029   0A??           00044     goto gp3_is_clear   ; Saute à "gp3_is_clear" si GP3 est à 0 (LOW)
+                      00045 
+                      00046     ; Saut vers le début de la boucle infinie
+002A   0A??           00047     goto loop
+                      00048 
+                      00049 ; Si appui sur BP
+002B                  00050 gp3_is_clear:
+                      00051     ; Changement de valeur pour var1 ("not var1")
+002B   0710           00052     btfss var1, 0
+002C   0C00           00053     movlw 0
+002D   0630           00054     btfsc var1, 1
+002E   0C01           00055     movlw 1
+002F   0030           00056     movwf var1
+                      00057     
+                      00058     ; Charge la valeur 100 (en décimal) dans WREG (pour 100ms)
 Warning[202]: Argument out of range.  Least significant bits used.
-002A   0C50           00056     movlw 250
-                      00057     ; Stocke la valeur de WREG à l'adresse mémoire temp0 (0x11h)
-002B   0031           00058     movwf temp0
-                      00059     ; Stocke la valeur de WREG aussi à l'adresse mémoire temp1 (0x12h)
-002C   0032           00060     movwf temp1
-                      00061     
-                      00062     ; Attend 250ms
-002D   0A??           00063     goto timer_250ms
-                      00064     
-002E                  00065 timer_250ms:
-002E   0000           00066     nop
-002F   0000           00067     nop
-0030   0000           00068     nop
-0031   0000           00069     nop
-0032   0000           00070     nop
-0033   0000           00071     nop
-0034   0000           00072     nop
-0035   0000           00073     nop
-0036   0000           00074     nop
-0037   0000           00075     nop
-0038   0000           00076     nop
-0039   0000           00077     nop
-003A   0000           00078     nop
-003B   0000           00079     nop
-003C   0000           00080     nop
-003D   0000           00081     nop
-003E   0000           00082     nop
-003F   0000           00083     nop
-0040   0000           00084     nop
-0041   0000           00085     nop
-0042   0000           00086     nop
-0043   0000           00087     nop
-0044   0000           00088     nop
-0045   0000           00089     nop
-0046   0000           00090     nop
-0047   0000           00091     nop
-0048   0000           00092     nop
-0049   0000           00093     nop
-004A   0000           00094     nop
-MPASM 5.86                          MAIN.ASM   9-27-2023  9:56:31         PAGE  3
-
-
-LOC  OBJECT CODE     LINE SOURCE TEXT
-  VALUE
-
-004B   0000           00095     nop
-004C   0000           00096     nop
-004D   0000           00097     nop
-004E   0000           00098     nop
-004F   0000           00099     nop
-                      00100     ; Décrémente la variable temp1
-0050   02F2           00101     decfsz temp1, 1
-                      00102     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
-0051   0A??           00103     goto timer_250ms
-                      00104     ; Décrémente la variable temp0
-0052   02F1           00105     decfsz temp0, 1
-                      00106     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
-0053   0A??           00107     goto timer_250ms
-                      00108 
+0030   0C00           00059     movlw 100
+                      00060     ; Stocke la valeur de WREG à l'adresse mémoire temp0 (0x11h)
+0031   0031           00061     movwf temp0
+                      00062     ; Charge la valeur 250 (en décimal) dans WREG (pour la ms)
+Warning[202]: Argument out of range.  Least significant bits used.
+0032   0C50           00063     movlw 250
+                      00064     ; Stocke la valeur de WREG aussi à l'adresse mémoire temp1 (0x12h)
+0033   0032           00065     movwf temp1
+                      00066     ; Attend 100ms
+0034   0A??           00067     goto timer_100ms
+                      00068     
+0035   0710           00069     btfss var1, 0
+                      00070     ; Mettre à 0 (LOW) GP0
+0036   0406           00071     bcf GPIO, GP0
+                      00072     
+0037   0630           00073     btfsc var1, 1
+                      00074     ; Mettre à 1 (HIGH) GP0
+0038   0506           00075     bsf GPIO, GP0
+                      00076     
+                      00077     
+0039                  00078 timer_100ms:
+0039   0000           00079     nop
+003A   0000           00080     nop
+003B   0000           00081     nop
+                      00082     ; Décrémente la variable temp1
+003C   02F2           00083     decfsz temp1, 1
+                      00084     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
+003D   0A??           00085     goto timer_100ms
+                      00086     ; Décrémente la variable temp0
+003E   02F1           00087     decfsz temp0, 1
+                      00088     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
+003F   0A??           00089     goto timer_100ms
 Warning[205]: Found directive in column 1. (END)
-0FEB                  00109 END
-MPASM 5.86                          MAIN.ASM   9-27-2023  9:56:31         PAGE  4
+0FEB                  00090 END
+MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  3
 
 
 SYMBOL TABLE
@@ -197,7 +173,7 @@ _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
 _WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-27-2023  9:56:31         PAGE  5
+MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  4
 
 
 SYMBOL TABLE
@@ -205,16 +181,16 @@ SYMBOL TABLE
 
 _WDT_ON                           00000FFF
 __10F200                          00000001
-gp3_is_clear                      00000029
-loop                              00000025
+gp3_is_clear                      0000002B
+loop                              00000028
 main                              00000020
 temp0                             00000011
 temp1                             00000012
-timer_250ms                       0000002E
+timer_100ms                       00000039
 var1                              00000010
 
 Errors   :     0
-Warnings :     3 reported,     0 suppressed
+Warnings :     4 reported,     0 suppressed
 Messages :     0 reported,     0 suppressed
 
 
