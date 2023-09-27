@@ -48,16 +48,52 @@ loop:
 gp3_is_clear:
     ; Mettre à 1 (HIGH) GP0
     bsf GPIO, GP0
+    
+    ;movlw 1
+    ;movwf var1
+    
     ; Charge la valeur 250 (en décimal) dans WREG
     movlw 250
     ; Stocke la valeur de WREG à l'adresse mémoire temp0 (0x11h)
     movwf temp0
     ; Stocke la valeur de WREG aussi à l'adresse mémoire temp1 (0x12h)
     movwf temp1
+    
     ; Attend 250ms
     goto timer_250ms
     
 timer_250ms:
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
+    nop
     nop
     nop
     nop
