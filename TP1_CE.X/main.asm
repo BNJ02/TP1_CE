@@ -38,16 +38,30 @@ led_on_pressed:
     btfsc GPIO, GP3 ; test de l'entrée 1
     goto led_on_pressed; Le bouton n'est pas appuyé
     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
+    ; Charge la valeur 250 (en décimal) dans WREG
+    movlw 250
+    movwf temp0
+    movlw 100
+    movwf temp1
+    call timer_100ms
 
 led_on_released:
     btfss GPIO, GP3 ; test de l'entrée 1
     goto led_on_released ;Le bouton n'est pas relaché...
     ; Le bouton est relaché
-    
+        
 led_off_pressed: 
     btfsc GPIO, GP3 ; test de l'entrée 1
     goto led_off_pressed; Le bouton n'est pas appuyé
     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
+    ; Charge la valeur 250 (en décimal) dans WREG
+    movlw 250
+    movwf temp0
+    movlw 100
+    movwf temp1
+    call timer_100ms
+    bcf GPIO, GP1
+    bcf GPIO, GP2
 
 led_off_released:
     btfss GPIO, GP3 ; test de l'entrée 1
@@ -67,4 +81,6 @@ timer_100ms:
     decfsz temp0, 1
     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
     goto timer_100ms
+    retlw 0
+
 END
