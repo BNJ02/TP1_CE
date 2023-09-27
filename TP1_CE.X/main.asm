@@ -38,6 +38,7 @@ led_on_pressed:
     btfss GPIO, GP3 ; test de l'entrée 1
     goto led_on_pressed; Le bouton n'est pas appuyé
     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
+    bsf GPIO, GP1 ; le bouton est appuyé, on allume la buzzer
 
 led_on_released:
     btfsc GPIO, GP3 ; test de l'entrée 1
@@ -48,6 +49,7 @@ led_off_pressed:
     btfss GPIO, GP3 ; test de l'entrée 1
     goto led_off_pressed; Le bouton n'est pas appuyé
     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
+    bcf GPIO, GP1 ; le bouton est appuyé, on eteint la buzzer
 
 led_off_released:
     btfsc GPIO, GP3 ; test de l'entrée 1

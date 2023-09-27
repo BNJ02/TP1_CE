@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -55,44 +55,46 @@ Warning[205]: Found directive in column 1. (__CONFIG)
 0025   0766           00038     btfss GPIO, GP3 ; test de l'entrée 1
 0026   0A??           00039     goto led_on_pressed; Le bouton n'est pas appuyé
 0027   0506           00040     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
-                      00041 
-0028                  00042 led_on_released:
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  2
+0028   0526           00041     bsf GPIO, GP1 ; le bouton est appuyé, on allume la buzzer
+                      00042 
+MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0028   0666           00043     btfsc GPIO, GP3 ; test de l'entrée 1
-0029   0A??           00044     goto led_on_released ;Le bouton n'est pas relaché...
-                      00045     ; Le bouton est relaché
-                      00046     
-002A                  00047 led_off_pressed: 
-002A   0766           00048     btfss GPIO, GP3 ; test de l'entrée 1
-002B   0A??           00049     goto led_off_pressed; Le bouton n'est pas appuyé
-002C   0406           00050     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
-                      00051 
-002D                  00052 led_off_released:
-002D   0666           00053     btfsc GPIO, GP3 ; test de l'entrée 1
-002E   0A??           00054     goto led_off_released ;Le bouton n'est pas relaché...
-                      00055     ; Le bouton est relaché  
-002F   0A??           00056     goto loop
-                      00057     
-0030                  00058 timer_100ms:
-0030   0000           00059     nop
-0031   0000           00060     nop
+0029                  00043 led_on_released:
+0029   0666           00044     btfsc GPIO, GP3 ; test de l'entrée 1
+002A   0A??           00045     goto led_on_released ;Le bouton n'est pas relaché...
+                      00046     ; Le bouton est relaché
+                      00047     
+002B                  00048 led_off_pressed: 
+002B   0766           00049     btfss GPIO, GP3 ; test de l'entrée 1
+002C   0A??           00050     goto led_off_pressed; Le bouton n'est pas appuyé
+002D   0406           00051     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
+002E   0426           00052     bcf GPIO, GP1 ; le bouton est appuyé, on eteint la buzzer
+                      00053 
+002F                  00054 led_off_released:
+002F   0666           00055     btfsc GPIO, GP3 ; test de l'entrée 1
+0030   0A??           00056     goto led_off_released ;Le bouton n'est pas relaché...
+                      00057     ; Le bouton est relaché  
+0031   0A??           00058     goto loop
+                      00059     
+0032                  00060 timer_100ms:
 0032   0000           00061     nop
-                      00062     ; Décrémente la variable temp1
-0033   02F2           00063     decfsz temp1, 1
-                      00064     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
-0034   0A??           00065     goto timer_100ms
-                      00066     ; Décrémente la variable temp0
-0035   02F1           00067     decfsz temp0, 1
-                      00068     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
-0036   0A??           00069     goto timer_100ms
+0033   0000           00062     nop
+0034   0000           00063     nop
+                      00064     ; Décrémente la variable temp1
+0035   02F2           00065     decfsz temp1, 1
+                      00066     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
+0036   0A??           00067     goto timer_100ms
+                      00068     ; Décrémente la variable temp0
+0037   02F1           00069     decfsz temp0, 1
+                      00070     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
+0038   0A??           00071     goto timer_100ms
 Warning[205]: Found directive in column 1. (END)
-0FEB                  00070 END
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  3
+0FEB                  00072 END
+MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  3
 
 
 SYMBOL TABLE
@@ -151,7 +153,7 @@ _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
 _WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  4
+MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  4
 
 
 SYMBOL TABLE
@@ -159,15 +161,15 @@ SYMBOL TABLE
 
 _WDT_ON                           00000FFF
 __10F200                          00000001
-led_off_pressed                   0000002A
-led_off_released                  0000002D
+led_off_pressed                   0000002B
+led_off_released                  0000002F
 led_on_pressed                    00000025
-led_on_released                   00000028
+led_on_released                   00000029
 loop                              00000025
 main                              00000020
 temp0                             00000011
 temp1                             00000012
-timer_100ms                       00000030
+timer_100ms                       00000032
 var1                              00000010
 
 Errors   :     0
