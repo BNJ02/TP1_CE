@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:05:04         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -46,75 +46,53 @@ Warning[205]: Found directive in column 1. (__CONFIG)
 0021   0002           00029     option
 0022   0CF8           00030     movlw 0F8h
 0023   0006           00031     tris GPIO
-0024   0C00           00032     movlw 0
-0025   0030           00033     movwf var1
-                      00034     ; Mettre à 0 (LOW) GP0
-0026   0406           00035     bcf GPIO, GP0
-0027   0A??           00036     goto loop ; Va dans la boucle infinie
-                      00037 
-                      00038 ; Programme principal
-                      00039         
-                      00040 ; La boucle infinie
-0028                  00041 loop:
-                      00042     ; Lecture de l'état de GP3
-MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  2
+0024   0506           00032     bsf GPIO, GP0
+                      00033 
+                      00034 ; Programme principal
+                      00035 ; La boucle infinie
+0025                  00036 loop: 
+0025                  00037 led_on_pressed:
+0025   0666           00038     btfsc GPIO, GP3 ; test de l'entrée 1
+0026   0A??           00039     goto led_on_pressed; Le bouton n'est pas appuyé
+0027   0506           00040     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
+                      00041 
+0028                  00042 led_on_released:
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:05:04         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0028   0766           00043     btfss GPIO, GP3   ; Vérifie si GP3 est à 1 (bit test skip if set)
-0029   0A??           00044     goto gp3_is_clear   ; Saute à "gp3_is_clear" si GP3 est à 0 (LOW)
-                      00045 
-                      00046     ; Saut vers le début de la boucle infinie
-002A   0A??           00047     goto loop
-                      00048 
-                      00049 ; Si appui sur BP
-002B                  00050 gp3_is_clear:
-                      00051     ; Changement de valeur pour var1 ("not var1")
-002B   0730           00052     btfss var1, 1
-002C   0C00           00053     movlw 0
-002D   0630           00054     btfsc var1, 1
-002E   0C01           00055     movlw 1
-002F   0030           00056     movwf var1
+0028   0766           00043     btfss GPIO, GP3 ; test de l'entrée 1
+0029   0A??           00044     goto led_on_released ;Le bouton n'est pas relaché...
+                      00045     ; Le bouton est relaché
+                      00046     
+002A                  00047 led_off_pressed: 
+002A   0666           00048     btfsc GPIO, GP3 ; test de l'entrée 1
+002B   0A??           00049     goto led_off_pressed; Le bouton n'est pas appuyé
+002C   0406           00050     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
+                      00051 
+002D                  00052 led_off_released:
+002D   0766           00053     btfss GPIO, GP3 ; test de l'entrée 1
+002E   0A??           00054     goto led_off_released ;Le bouton n'est pas relaché...
+                      00055     ; Le bouton est relaché  
+002F   0A??           00056     goto loop
                       00057     
-                      00058     ; Charge la valeur 100 (en décimal) dans WREG (pour 100ms)
-Warning[202]: Argument out of range.  Least significant bits used.
-0030   0C00           00059     movlw 100
-                      00060     ; Stocke la valeur de WREG à l'adresse mémoire temp0 (0x11h)
-0031   0031           00061     movwf temp0
-                      00062     ; Charge la valeur 250 (en décimal) dans WREG (pour la ms)
-Warning[202]: Argument out of range.  Least significant bits used.
-0032   0C50           00063     movlw 250
-                      00064     ; Stocke la valeur de WREG aussi à l'adresse mémoire temp1 (0x12h)
-0033   0032           00065     movwf temp1
-                      00066     ; Attend 100ms
-0034   0A??           00067     goto timer_100ms
-                      00068     
-0035   0630           00069     btfsc var1, 1
-                      00070     ; Mettre à 0 (LOW) GP0
-0036   0406           00071     bcf GPIO, GP0
-                      00072     
-0037   0730           00073     btfss var1, 1
-                      00074     ; Mettre à 1 (HIGH) GP0
-0038   0506           00075     bsf GPIO, GP0
-                      00076     
-                      00077     
-0039                  00078 timer_100ms:
-0039   0000           00079     nop
-003A   0000           00080     nop
-003B   0000           00081     nop
-                      00082     ; Décrémente la variable temp1
-003C   02F2           00083     decfsz temp1, 1
-                      00084     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
-003D   0A??           00085     goto timer_100ms
-                      00086     ; Décrémente la variable temp0
-003E   02F1           00087     decfsz temp0, 1
-                      00088     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
-003F   0A??           00089     goto timer_100ms
+0030                  00058 timer_100ms:
+0030   0000           00059     nop
+0031   0000           00060     nop
+0032   0000           00061     nop
+                      00062     ; Décrémente la variable temp1
+0033   02F2           00063     decfsz temp1, 1
+                      00064     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
+0034   0A??           00065     goto timer_100ms
+                      00066     ; Décrémente la variable temp0
+0035   02F1           00067     decfsz temp0, 1
+                      00068     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
+0036   0A??           00069     goto timer_100ms
 Warning[205]: Found directive in column 1. (END)
-0FEB                  00090 END
-MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  3
+0FEB                  00070 END
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:05:04         PAGE  3
 
 
 SYMBOL TABLE
@@ -173,7 +151,7 @@ _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
 _WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  4
+MPASM 5.86                          MAIN.ASM   9-27-2023  14:05:04         PAGE  4
 
 
 SYMBOL TABLE
@@ -181,16 +159,19 @@ SYMBOL TABLE
 
 _WDT_ON                           00000FFF
 __10F200                          00000001
-gp3_is_clear                      0000002B
-loop                              00000028
+led_off_pressed                   0000002A
+led_off_released                  0000002D
+led_on_pressed                    00000025
+led_on_released                   00000028
+loop                              00000025
 main                              00000020
 temp0                             00000011
 temp1                             00000012
-timer_100ms                       00000039
+timer_100ms                       00000030
 var1                              00000010
 
 Errors   :     0
-Warnings :     4 reported,     0 suppressed
+Warnings :     2 reported,     0 suppressed
 Messages :     0 reported,     0 suppressed
 
 

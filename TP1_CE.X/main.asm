@@ -29,51 +29,31 @@ main:	movlw 0CFh
     option
     movlw 0F8h
     tris GPIO
-    movlw 0
-    movwf var1
-    ; Mettre à 0 (LOW) GP0
-    bcf GPIO, GP0
-    goto loop ; Va dans la boucle infinie
+    bsf GPIO, GP0
 
 ; Programme principal
-	
 ; La boucle infinie
-loop:
-    ; Lecture de l'état de GP3
-    btfss GPIO, GP3   ; Vérifie si GP3 est à 1 (bit test skip if set)
-    goto gp3_is_clear   ; Saute à "gp3_is_clear" si GP3 est à 0 (LOW)
+loop: 
+led_on_pressed:
+    btfsc GPIO, GP3 ; test de l'entrée 1
+    goto led_on_pressed; Le bouton n'est pas appuyé
+    bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
 
-    ; Saut vers le début de la boucle infinie
+led_on_released:
+    btfss GPIO, GP3 ; test de l'entrée 1
+    goto led_on_released ;Le bouton n'est pas relaché...
+    ; Le bouton est relaché
+    
+led_off_pressed: 
+    btfsc GPIO, GP3 ; test de l'entrée 1
+    goto led_off_pressed; Le bouton n'est pas appuyé
+    bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
+
+led_off_released:
+    btfss GPIO, GP3 ; test de l'entrée 1
+    goto led_off_released ;Le bouton n'est pas relaché...
+    ; Le bouton est relaché  
     goto loop
-
-; Si appui sur BP
-gp3_is_clear:
-    ; Changement de valeur pour var1 ("not var1")
-    btfss var1, 1
-    movlw 0
-    btfsc var1, 1
-    movlw 1
-    movwf var1
-    
-    ; Charge la valeur 100 (en décimal) dans WREG (pour 100ms)
-    movlw 100
-    ; Stocke la valeur de WREG à l'adresse mémoire temp0 (0x11h)
-    movwf temp0
-    ; Charge la valeur 250 (en décimal) dans WREG (pour la ms)
-    movlw 250
-    ; Stocke la valeur de WREG aussi à l'adresse mémoire temp1 (0x12h)
-    movwf temp1
-    ; Attend 100ms
-    goto timer_100ms
-    
-    btfsc var1, 1
-    ; Mettre à 0 (LOW) GP0
-    bcf GPIO, GP0
-    
-    btfss var1, 1
-    ; Mettre à 1 (HIGH) GP0
-    bsf GPIO, GP0
-    
     
 timer_100ms:
     nop
