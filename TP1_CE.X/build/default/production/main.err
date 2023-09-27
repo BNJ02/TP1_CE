@@ -1,6 +1,6 @@
 Warning[205] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 6 : Found directive in column 1. (__CONFIG)
-Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 68 : Argument out of range.  Least significant bits used.
-Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 70 : Argument out of range.  Least significant bits used.
-Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 97 : Argument out of range.  Least significant bits used.
-Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 99 : Argument out of range.  Least significant bits used.
-Warning[205] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 107 : Found directive in column 1. (END)
+Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 67 : Argument out of range.  Least significant bits used.
+Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 69 : Argument out of range.  Least significant bits used.
+Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 96 : Argument out of range.  Least significant bits used.
+Warning[202] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 98 : Argument out of range.  Least significant bits used.
+Warning[205] C:\USERS\BENJI\DOCUMENTS\TP1_CE\TP1_CE.X\MAIN.ASM 106 : Found directive in column 1. (END)

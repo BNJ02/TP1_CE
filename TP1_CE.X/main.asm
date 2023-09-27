@@ -15,8 +15,7 @@ GP3 equ 03h
 var1 equ 10h
 temp0 equ 11h
 temp1 equ 12h
-temp2 equ 11h
-temp3 equ 12h
+temp2 equ 13h
 
 ; Start
     ORG 0X000
