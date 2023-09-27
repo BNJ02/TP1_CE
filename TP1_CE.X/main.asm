@@ -49,7 +49,7 @@ loop:
 ; Si appui sur BP
 gp3_is_clear:
     ; Changement de valeur pour var1 ("not var1")
-    btfss var1, 0
+    btfss var1, 1
     movlw 0
     btfsc var1, 1
     movlw 1
@@ -66,11 +66,11 @@ gp3_is_clear:
     ; Attend 100ms
     goto timer_100ms
     
-    btfss var1, 0
+    btfsc var1, 1
     ; Mettre à 0 (LOW) GP0
     bcf GPIO, GP0
     
-    btfsc var1, 1
+    btfss var1, 1
     ; Mettre à 1 (HIGH) GP0
     bsf GPIO, GP0
     

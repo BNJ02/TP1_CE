@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -57,7 +57,7 @@ Warning[205]: Found directive in column 1. (__CONFIG)
                       00040 ; La boucle infinie
 0028                  00041 loop:
                       00042     ; Lecture de l'état de GP3
-MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  2
+MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -72,7 +72,7 @@ LOC  OBJECT CODE     LINE SOURCE TEXT
                       00049 ; Si appui sur BP
 002B                  00050 gp3_is_clear:
                       00051     ; Changement de valeur pour var1 ("not var1")
-002B   0710           00052     btfss var1, 0
+002B   0730           00052     btfss var1, 1
 002C   0C00           00053     movlw 0
 002D   0630           00054     btfsc var1, 1
 002E   0C01           00055     movlw 1
@@ -91,11 +91,11 @@ Warning[202]: Argument out of range.  Least significant bits used.
                       00066     ; Attend 100ms
 0034   0A??           00067     goto timer_100ms
                       00068     
-0035   0710           00069     btfss var1, 0
+0035   0630           00069     btfsc var1, 1
                       00070     ; Mettre à 0 (LOW) GP0
 0036   0406           00071     bcf GPIO, GP0
                       00072     
-0037   0630           00073     btfsc var1, 1
+0037   0730           00073     btfss var1, 1
                       00074     ; Mettre à 1 (HIGH) GP0
 0038   0506           00075     bsf GPIO, GP0
                       00076     
@@ -114,7 +114,7 @@ Warning[202]: Argument out of range.  Least significant bits used.
 003F   0A??           00089     goto timer_100ms
 Warning[205]: Found directive in column 1. (END)
 0FEB                  00090 END
-MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  3
+MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  3
 
 
 SYMBOL TABLE
@@ -173,7 +173,7 @@ _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
 _WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-27-2023  10:47:17         PAGE  4
+MPASM 5.86                          MAIN.ASM   9-27-2023  11:15:18         PAGE  4
 
 
 SYMBOL TABLE
