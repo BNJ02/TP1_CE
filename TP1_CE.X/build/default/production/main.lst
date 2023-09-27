@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:46:59         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -30,42 +30,69 @@ Warning[205]: Found directive in column 1. (__CONFIG)
   00000002            00013 GP2 equ 02h
   00000003            00014 GP3 equ 03h
   00000010            00015 var1 equ 10h
-                      00016 
-                      00017 ; Start
-                      00018         ORG 0X000
-                      00019 
-0000   0025           00020         movwf OSCCAL
-0001   0A??           00021         goto main
-                      00022 
-                      00023         ORG 0X020
+  00000011            00016 temp0 equ 11h
+  00000012            00017 temp1 equ 12h
+                      00018 
+                      00019 ; Start
+                      00020     ORG 0X000
+                      00021 
+0000   0025           00022     movwf OSCCAL
+0001   0A??           00023     goto main
                       00024 
-                      00025 ; Set up
-0020   0CCF           00026 main:   movlw 0CFh
-0021   0002           00027         option
-0022   0CF8           00028         movlw 0F8h
-0023   0006           00029         tris GPIO
-0024   0A??           00030         goto loop ; Va dans la boucle infinie
-                      00031 
-                      00032 ; Programme principal
-                      00033         
-                      00034 ; La boucle infinie
-0025                  00035 loop:
-                      00036     ; Lecture de l'état de GP3
-0025   0666           00037     btfsc GPIO, GP3   ; Vérifie si GP3 est à 0 (bit test skip if clear)
-0026   0506           00038     bsf GPIO, GP0  
-0027   0406           00039     bcf GPIO, GP0
-                      00040     ; Saut vers le début de la boucle (while(1) infinie)
-0028   0A??           00041     goto loop
-                      00042 
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:46:59         PAGE  2
+                      00025     ORG 0X020
+                      00026 
+                      00027 ; Set up
+0020   0CCF           00028 main:   movlw 0CFh
+0021   0002           00029     option
+0022   0CF8           00030     movlw 0F8h
+0023   0006           00031     tris GPIO
+0024   0506           00032     bsf GPIO, GP0
+                      00033 
+                      00034 ; Programme principal
+                      00035 ; La boucle infinie
+0025                  00036 loop: 
+0025                  00037 led_on_pressed:
+0025   0766           00038     btfss GPIO, GP3 ; test de l'entrée 1
+0026   0A??           00039     goto led_on_pressed; Le bouton n'est pas appuyé
+0027   0506           00040     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
+                      00041 
+0028                  00042 led_on_released:
+MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
+0028   0666           00043     btfsc GPIO, GP3 ; test de l'entrée 1
+0029   0A??           00044     goto led_on_released ;Le bouton n'est pas relaché...
+                      00045     ; Le bouton est relaché
+                      00046     
+002A                  00047 led_off_pressed: 
+002A   0766           00048     btfss GPIO, GP3 ; test de l'entrée 1
+002B   0A??           00049     goto led_off_pressed; Le bouton n'est pas appuyé
+002C   0406           00050     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
+                      00051 
+002D                  00052 led_off_released:
+002D   0666           00053     btfsc GPIO, GP3 ; test de l'entrée 1
+002E   0A??           00054     goto led_off_released ;Le bouton n'est pas relaché...
+                      00055     ; Le bouton est relaché  
+002F   0A??           00056     goto loop
+                      00057     
+0030                  00058 timer_100ms:
+0030   0000           00059     nop
+0031   0000           00060     nop
+0032   0000           00061     nop
+                      00062     ; Décrémente la variable temp1
+0033   02F2           00063     decfsz temp1, 1
+                      00064     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
+0034   0A??           00065     goto timer_100ms
+                      00066     ; Décrémente la variable temp0
+0035   02F1           00067     decfsz temp0, 1
+                      00068     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
+0036   0A??           00069     goto timer_100ms
 Warning[205]: Found directive in column 1. (END)
-0FEB                  00043 END
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:46:59         PAGE  3
+0FEB                  00070 END
+MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  3
 
 
 SYMBOL TABLE
@@ -124,7 +151,7 @@ _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
 _WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-27-2023  16:46:59         PAGE  4
+MPASM 5.86                          MAIN.ASM   9-27-2023  16:51:05         PAGE  4
 
 
 SYMBOL TABLE
@@ -132,8 +159,15 @@ SYMBOL TABLE
 
 _WDT_ON                           00000FFF
 __10F200                          00000001
+led_off_pressed                   0000002A
+led_off_released                  0000002D
+led_on_pressed                    00000025
+led_on_released                   00000028
 loop                              00000025
 main                              00000020
+temp0                             00000011
+temp1                             00000012
+timer_100ms                       00000030
 var1                              00000010
 
 Errors   :     0
