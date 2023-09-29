@@ -1,4 +1,4 @@
-MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  1
+MPASM 5.86                          MAIN.ASM   9-29-2023  15:53:08         PAGE  1
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
@@ -32,69 +32,89 @@ Warning[205]: Found directive in column 1. (__CONFIG)
   00000010            00015 var1 equ 10h
   00000011            00016 temp0 equ 11h
   00000012            00017 temp1 equ 12h
-                      00018 
-                      00019 ; Start
-                      00020     ORG 0X000
-                      00021 
-0000   0025           00022     movwf OSCCAL
-0001   0A??           00023     goto main
-                      00024 
-                      00025     ORG 0X020
-                      00026 
-                      00027 ; Set up
-0020   0CCF           00028 main:   movlw 0CFh
-0021   0002           00029     option
-0022   0CF8           00030     movlw 0F8h
-0023   0006           00031     tris GPIO
-0024   0506           00032     bsf GPIO, GP0
-                      00033 
-                      00034 ; Programme principal
-                      00035 ; La boucle infinie
-0025                  00036 loop: 
-0025                  00037 led_on_pressed:
-0025   0766           00038     btfss GPIO, GP3 ; test de l'entrée 1
-0026   0A??           00039     goto led_on_pressed; Le bouton n'est pas appuyé
-0027   0506           00040     bsf GPIO, GP0 ; le bouton est appuyé, on allume la led
-0028   0526           00041     bsf GPIO, GP1 ; le bouton est appuyé, on allume la buzzer
-                      00042 
-MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  2
+  00000013            00018 temp2 equ 13h
+                      00019 
+                      00020 ; Start
+                      00021     ORG 0X000
+                      00022 
+0000   0025           00023     movwf OSCCAL
+0001   0A??           00024     goto main
+                      00025 
+                      00026     ORG 0X020
+                      00027 
+                      00028 ; Set up
+0020                  00029 main:   
+0020   0CCF           00030     movlw 0CFh
+0021   0002           00031     option
+0022   0CF1           00032     movlw 0F1h
+0023   0006           00033     tris GPIO
+0024   0A??           00034     goto loop ; Va dans la boucle infinie
+                      00035 
+                      00036 ; Programme principal
+                      00037 ; La boucle infinie
+0025                  00038 loop:
+                      00039     ; Détection de mouvement ?
+0025   0706           00040     btfss GPIO, GP0   ; Skip la prochaine instruction si un mouvement est détecté
+0026   0A??           00041     goto loop
+                      00042     
+MPASM 5.86                          MAIN.ASM   9-29-2023  15:53:08         PAGE  2
 
 
 LOC  OBJECT CODE     LINE SOURCE TEXT
   VALUE
 
-0029                  00043 led_on_released:
-0029   0666           00044     btfsc GPIO, GP3 ; test de l'entrée 1
-002A   0A??           00045     goto led_on_released ;Le bouton n'est pas relaché...
-                      00046     ; Le bouton est relaché
-                      00047     
-002B                  00048 led_off_pressed: 
-002B   0766           00049     btfss GPIO, GP3 ; test de l'entrée 1
-002C   0A??           00050     goto led_off_pressed; Le bouton n'est pas appuyé
-002D   0406           00051     bcf GPIO, GP0 ; le bouton est appuyé, on eteint la led
-002E   0426           00052     bcf GPIO, GP1 ; le bouton est appuyé, on eteint la buzzer
-                      00053 
-002F                  00054 led_off_released:
-002F   0666           00055     btfsc GPIO, GP3 ; test de l'entrée 1
-0030   0A??           00056     goto led_off_released ;Le bouton n'est pas relaché...
-                      00057     ; Le bouton est relaché  
-0031   0A??           00058     goto loop
+                      00043     ; Allume la LED et le buzzer
+0027   0426           00044     bcf GPIO, GP1; led
+0028   0546           00045     bsf GPIO, GP2 ; buzzer
+                      00046     
+                      00047     ; Attend 2s
+0029   0C20           00048     movlw 20
+002A   0033           00049     movwf temp2
+002B   09??           00050     call timer_2s
+                      00051     
+                      00052     ; Eteind le buzzer
+002C   0446           00053     bcf GPIO, GP2 ; buzzer
+                      00054     
+                      00055     ; Détecte s'il n'y a plus de mouvement
+Warning[207]: Found label after column 1. (TAG)
+002D                  00056     TAG:
+002D   0606           00057     btfsc GPIO, GP0
+002E   0A??           00058     goto TAG
                       00059     
-0032                  00060 timer_100ms:
-0032   0000           00061     nop
-0033   0000           00062     nop
-0034   0000           00063     nop
-                      00064     ; Décrémente la variable temp1
-0035   02F2           00065     decfsz temp1, 1
-                      00066     ; Si temp1 n'est pas encore à zéro, retourne à la boucle
-0036   0A??           00067     goto timer_100ms
-                      00068     ; Décrémente la variable temp0
-0037   02F1           00069     decfsz temp0, 1
-                      00070     ; Si temp0 n'est pas encore à zéro, retourne à la boucle
-0038   0A??           00071     goto timer_100ms
+                      00060     ; Eteind la LED
+002F   0526           00061     bsf GPIO, GP1
+                      00062           
+                      00063     ; Saut vers le début de la boucle infinie
+0030   0A??           00064     goto loop 
+                      00065     
+0031                  00066 timer_2s:
+Warning[202]: Argument out of range.  Least significant bits used.
+0031   0C50           00067     movlw 250
+0032   0031           00068     movwf temp0
+Warning[202]: Argument out of range.  Least significant bits used.
+0033   0C00           00069     movlw 100
+0034   0032           00070     movwf temp1
+Warning[207]: Found label after column 1. (timer_100ms)
+0035                  00071     timer_100ms:
+0035   0000           00072         nop
+0036   0000           00073         nop
+0037   0000           00074         nop
+                      00075         ; Décrémente la variable temp1
+0038   02F1           00076         decfsz temp0, 1
+                      00077         ; Si temp1 n'est pas encore à zéro, retourne à la boucle
+0039   0A??           00078         goto timer_100ms
+                      00079         ; Décrémente la variable temp0
+003A   02F2           00080         decfsz temp1, 1
+                      00081         ; Si temp0 n'est pas encore à zéro, retourne à la boucle
+003B   0A??           00082         goto timer_100ms    
+                      00083     ; Décrémente la variable temp2
+003C   02F3           00084     decfsz temp2, 1
+003D   0A??           00085     goto timer_2s
+003E   0800           00086     retlw 0
+                      00087 
 Warning[205]: Found directive in column 1. (END)
-0FEB                  00072 END
-MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  3
+0FEB                  00088 END
+MPASM 5.86                          MAIN.ASM   9-29-2023  15:53:08         PAGE  3
 
 
 SYMBOL TABLE
@@ -132,6 +152,7 @@ PSA                               00000003
 STATUS                            00000003
 T0CS                              00000005
 T0SE                              00000004
+TAG                               0000002D
 TMR0                              00000001
 TRISIO0                           00000000
 TRISIO1                           00000001
@@ -152,28 +173,26 @@ _MCLRE_ON                         00000FFF
 _OSC_IntRC                        00000FFF
 _WDTE_OFF                         00000FFB
 _WDTE_ON                          00000FFF
-_WDT_OFF                          00000FFB
-MPASM 5.86                          MAIN.ASM   9-27-2023  17:07:36         PAGE  4
+MPASM 5.86                          MAIN.ASM   9-29-2023  15:53:08         PAGE  4
 
 
 SYMBOL TABLE
   LABEL                             VALUE 
 
+_WDT_OFF                          00000FFB
 _WDT_ON                           00000FFF
 __10F200                          00000001
-led_off_pressed                   0000002B
-led_off_released                  0000002F
-led_on_pressed                    00000025
-led_on_released                   00000029
 loop                              00000025
 main                              00000020
 temp0                             00000011
 temp1                             00000012
-timer_100ms                       00000032
+temp2                             00000013
+timer_100ms                       00000035
+timer_2s                          00000031
 var1                              00000010
 
 Errors   :     0
-Warnings :     2 reported,     0 suppressed
+Warnings :     6 reported,     0 suppressed
 Messages :     0 reported,     0 suppressed
 
 
